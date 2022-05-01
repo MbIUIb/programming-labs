@@ -1,6 +1,6 @@
 import pygame
 import sys
-from programming_labs.Lab8.lab8 import lab_8
+from programming_languages_labs.Lab8.lab8 import lab_8
 
 
 with open('fig.txt') as f:

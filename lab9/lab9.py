@@ -198,14 +198,7 @@ def lab_8(circle_x=0, circle_y=0):
 
     # отрисовка области
     if circle_status == 'in' and rectangle_status == 'in':
-        if line_status == '>':
-            draw_line(line_x1, line_y1, line_x2, line_y2, '>')
-        elif line_status == '<':
-            draw_line(line_x1, line_y1, line_x2, line_y2, '<')
-        elif line_status == 'слева':
-            draw_line(line_x1, line_y1, line_x2, line_y2, 'слева')
-        elif line_status == 'справа':
-            draw_line(line_x1, line_y1, line_x2, line_y2, 'справа')
+        draw_line(line_x1, line_y1, line_x2, line_y2, line_status)
         draw_circle(circle_x, circle_y, circle_r, 'out', 'w')
         draw_rectangle(rectangle_x1, rectangle_y1, rectangle_x2, rectangle_y2, 'out', 'w')
     if circle_status == 'in' and rectangle_status == 'out':

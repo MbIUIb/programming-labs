@@ -1,21 +1,8 @@
-t = int(input())
+for kit in range(int(input())):
+    s, c = input(), input()
+    indexes_c = [idx for idx, char in enumerate(s) if char == c]
 
-for kit in range(t):
-    s = input()
-    c = input()
-    indexes_c = []
-
-    for char in range(len(s)):
-        if s[char] == c:
-            indexes_c.append(char)
-
-    flag = False
-    for i in range(len(indexes_c)):
-        if indexes_c[i] % 2 == 0:
-            flag = True
-            break
-
-    if flag:
+    if any(map(lambda x: not x % 2, indexes_c)):
         print('YES')
     else:
         print('NO')

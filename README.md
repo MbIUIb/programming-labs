@@ -30,7 +30,7 @@
 
 ### Lab5
 
-[Ссылка ведёт на задание к лабе.](http://codeforces.com/contest/1650/problem/A)
+[Задание к лабе.](http://codeforces.com/contest/1650/problem/A)
 
 
 ### Lab6

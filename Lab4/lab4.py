@@ -1,6 +1,6 @@
 letters = [chr(i) for i in range(1072, 1104)] + [chr(i) for i in range(97, 122+1)] + ['ё']
-ru_vowels = ['а', 'о', 'э', 'е', 'и', 'ы', 'у', 'ё', 'ю', 'я']
-en_vowels = ['a', 'e', 'i', 'o', 'u', 'y']
+ru_vowels = 'аоэеиыуёюя'
+en_vowels = 'aeiouy'
 vowels = ru_vowels + en_vowels
 char_in_text = {}
 

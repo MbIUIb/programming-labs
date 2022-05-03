@@ -90,7 +90,6 @@ def sort_dict():
         print(f'{key} - {dictionary[key]}')
 
 
-flag = True
 while flag:
     print('_____________________________________________\n'
           '1 - добавить пару\n'
@@ -125,5 +124,5 @@ while flag:
     elif n == 9:
         dictionary = reverse()
     elif n == 10:
-        flag = False
+        break
     print('\n\n\n')

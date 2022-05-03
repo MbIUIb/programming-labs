@@ -1,6 +1,4 @@
-number = int(input('Введите число: '))
-
-if number > 1:
+if (number := int(input('Введите число: '))) > 1:
     count = 2
 
     for divider in range(2, int(number**0.5)+1):

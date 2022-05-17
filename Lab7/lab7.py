@@ -90,7 +90,7 @@ def sort_dict():
         print(f'{key} - {dictionary[key]}')
 
 
-while flag:
+while True:
     print('_____________________________________________\n'
           '1 - добавить пару\n'
           '2 - удалить пару\n'

@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 import numpy as np
 
-with open('fig.txt') as f:
+with open('Data\\fig.txt') as f:
     # прямая
     line_x1, line_y1, line_x2, line_y2 = map(float, f.readline().split())
     if line_x1 != line_x2:
@@ -255,7 +255,6 @@ def lab_8(circle_x=0, circle_y=0):
     axes.grid(which='minor', alpha=0.2)
     axes.grid(which='major', alpha=0.5)
 
-    plt.savefig('fig.png')
+    plt.savefig('Data\\fig.png')
     plt.close()
 
-# lab_8()

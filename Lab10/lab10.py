@@ -1,17 +1,17 @@
-import time
 from datetime import datetime
 from cryptography.fernet import Fernet
-import os
+# from programming_languages_labs.Lab9.Data import lab9_logs
 
 
 class Logger:
-    def __init__(self, file:str='logs.txt', encryption_mode:bool=False):
+    def __init__(self, file:str='Data\\logs.txt', new_file:str='new'):
         self.file = file
-        # очистка файла
-        with open(self.file, 'w') as f:
-            pass
+        self.new_file = new_file
+        if self.new_file:
+            # очистка файла
+            with open(self.file, 'w') as f:
+                pass
 
-        self.encryption_mode = encryption_mode
         self.create_key()
         self.key = self.load_key()
 
@@ -21,12 +21,12 @@ class Logger:
     def create_key(self):
         """Метод создает ключ key и записывает его в файл"""
         key = Fernet.generate_key()
-        with open('key', 'wb') as key_file:
+        with open('Data\\key', 'wb') as key_file:
             key_file.write(key)
 
     def load_key(self):
         """Метод возвращает ключ из файла key"""
-        return open('key', 'rb').read()
+        return open('Data\\key', 'rb').read()
 
 
     def date_of_log(self):
@@ -76,11 +76,3 @@ def decrypt(*args):
 
     with open(decrypt_file, 'wb') as file:
         file.write(decrypted_data)
-
-
-if __name__ == '__main__':
-    a = Logger(encryption_mode=True)
-    a.new_log('event')
-
-    a.encrypt()
-    decrypt('logs.txt', 'decryptlogs', a.key)

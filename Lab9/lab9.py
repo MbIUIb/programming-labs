@@ -36,6 +36,7 @@ while 1:
     lab_8(circle_x, circle_y)
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
+            log.new_log(f'закрытие приложения')
             log.encrypt()
             sys.exit()
         elif i.type == pygame.KEYDOWN:

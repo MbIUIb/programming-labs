@@ -1,20 +1,27 @@
 from matplotlib import pyplot as plt
 import numpy as np
+import sys
 
 with open('Data\\fig.txt') as f:
+    try:
     # прямая
-    line_x1, line_y1, line_x2, line_y2 = map(float, f.readline().split())
-    if line_x1 != line_x2:
-        k = (line_y1 - line_y2) / (line_x1 - line_x2)
-        b = line_y1 - k * line_x1
-    else:
-        k = 'undef'
-    # прямоугольник
-    rectangle_x1, rectangle_y1, rectangle_x2, rectangle_y2 = map(float, f.readline().split())
-    # окружность
-    circle_x, circle_y, circle_r = map(float, f.readline().split())
-    # точка
-    x, y = map(float, f.readline().split())
+        line_x1, line_y1, line_x2, line_y2 = map(float, f.readline().split())
+        if line_x1 != line_x2:
+            k = (line_y1 - line_y2) / (line_x1 - line_x2)
+            b = line_y1 - k * line_x1
+        else:
+            k = 'undef'
+        # прямоугольник
+        rectangle_x1, rectangle_y1, rectangle_x2, rectangle_y2 = map(float, f.readline().split())
+        # окружность
+        circle_x, circle_y, circle_r = map(float, f.readline().split())
+        # точка
+        x, y = map(float, f.readline().split())
+    except ValueError as e:
+        print('Ошибка ввода:', e)
+        sys.exit()
+    finally:
+        print('xex')
 
 
 def lab_8(circle_x=0, circle_y=0):

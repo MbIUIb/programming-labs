@@ -24,7 +24,7 @@ class Database:
 
 
     def new_user(self, login, password):
-        self.execute("""SELECT login FROM users""")
+        self.cursor.execute("""SELECT login FROM users""")
         logins = self.cursor.fetchall()
 
         if (login, ) not in logins:

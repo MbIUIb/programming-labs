@@ -1,8 +1,9 @@
 from  tkinter import *
 from tkinter import messagebox
+from database import Database
+import hashlib
 
-# Закрытие окна, не завершая работу программы
-# self.window.destroy()
+
 class Window:
     def __init__(self, width=600, height=300, title='Lab 11', resizable=(False, False)):
         self.window = Tk()
@@ -16,6 +17,9 @@ class Window:
     def run(self):
         self.draw_widgets()
         self.window.mainloop()
+
+    def close_window(self):
+        self.window.destroy()
 
 
     def grab_focus(self):
@@ -66,12 +70,18 @@ class LoginWindow(Window):
         # определение формата окна и положения курсора
         self.window.geometry(f'{width}x{height}+550+200')
         self.window.resizable(resizable[0], resizable[1])
-
+        # формы для ввода данных
         self.login = Entry(self.window)
         self.password = Entry(self.window, show='*')
 
+        self.db = Database()
+
         self.draw_widgets()
         self.grab_focus()
+
+
+    def __del__(self):
+        self.db.close()
 
 
     def draw_widgets(self):
@@ -92,28 +102,36 @@ class LoginWindow(Window):
 
 
     def log(self):
-        """Метод получает данные из полей ввода"""
+        """
+        Метод создает окно регистрации/входа, получает данные из полей ввода, сравнивает с данными из базы данных и
+        вызывает окно с дополнительной информацией в зависимости от случая
+        """
+
         login = self.login.get()
         password = self.password.get()
+        password_hash = hashlib.sha512(password.encode()).hexdigest()
 
         if self.type == 'Регистрация':
-            # регистрация пользвателя.......
-            #
-            #
+            if self.db.new_user(login, password_hash):
+                self.db.commit()
 
-            messagebox.showinfo('Регистрация', f'Пользлватель {login} успешно зарегистрирован!')
+                self.window.destroy()
+                messagebox.showinfo('Регистрация', f'Пользователь {login} успешно зарегистрирован!')
+            else:
+                messagebox.showerror('Ошибка', f'Пользователь {login} уже существует, попробуйте другой login.')
+
+
         elif self.type == 'Вход':
-            #вход пользователя.......
-            #
-            #
+            status = self.db.authentication(login, password_hash)
+            self.db.commit()
 
-            # messagebox.showinfo('Вход', f'Пользлватель {login} успешно вошел!')
-            pass
-        self.window.destroy()
+            if status == 'successful':
+                self.close_window()
+                messagebox.showinfo('Вход', f'Вы успешно вошли!\n\nВаш логин: {login}\nВаш id: {self.db.get_id(login)}')
 
+            elif status == 'login error':
+                messagebox.showerror('Ошибка', f'Пользователя {login} не существует. Зарегистрируйтесь перед тем, как войти.')
+                self.window.destroy()
+            elif status == 'password error':
+                messagebox.showerror('Ошибка', f'Неверный пароль, попробуйте еще раз.')
 
-
-
-if __name__ == '__main__':
-    win = Window()
-    win.run()

@@ -19,7 +19,7 @@ class Database:
 
 
     def num_of_users(self):
-        self.execute("""SELECT * FROM users""")
+        self.cursor.execute("""SELECT * FROM users""")
         return len(self.cursor.fetchall())
 
 

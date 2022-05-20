@@ -1,5 +1,4 @@
 from typing import Sequence
-from itertools import chain
 import sqlite3
 
 

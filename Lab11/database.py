@@ -26,13 +26,9 @@ class Database:
         return self.cursor.fetchall()
 
     def new_user(self, login, password):
-        login = (login, )
-
-        if login not in self.get_user_logins():
+        if (login, ) not in self.get_user_logins():
             user_id = self.num_of_users()+1
-            query = """INSERT INTO users (id, login, password) VALUES(?, ?, ?)"""
-            values = (user_id, login, password)
-            self.cursor.execute(query, values)
+            self.cursor.execute("""INSERT INTO users (id, login, password) VALUES(?, ?, ?)""", (user_id, login, password))
             return 1
         return 0
 
@@ -48,6 +44,6 @@ class Database:
             return 'successful'
         return 'password error'
 
-    def get_id(self, login: Sequence):
-        return self.cursor.execute("""SELECT id FROM users WHERE login == ?""", login).fetchone()[0]
+    def get_id(self, login):
+        return self.cursor.execute("""SELECT id FROM users WHERE login == ?""", (login, )).fetchone()[0]
 

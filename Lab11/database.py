@@ -1,12 +1,12 @@
+from typing import Sequence
 import sqlite3
 
 
 class Database:
     def __init__(self):
-        self.db = sqlite3.connect('Data\\database.db')
+        self.db = sqlite3.connect('Data/database.db')
         self.cursor = self.db.cursor()
         self.create_table()
-
 
     def create_table(self):
         self.cursor.execute("""CREATE TABLE IF NOT EXISTS users(id INTEGER, login TEXT, password TEXT)""")
@@ -17,37 +17,37 @@ class Database:
     def close(self):
         self.db.close()
 
-
     def num_of_users(self):
         self.cursor.execute("""SELECT * FROM users""")
         return len(self.cursor.fetchall())
 
+    def get_user_logins(self):
+        self.cursor.execute("""SELECT login FROM users""")
+        return self.cursor.fetchall()
 
     def new_user(self, login, password):
-        self.cursor.execute("""SELECT login FROM users""")
-        logins = self.cursor.fetchall()
+        login = (login, )
 
-        if (login, ) not in logins:
-            id = self.num_of_users()+1
+        if login not in self.get_user_logins():
+            user_id = self.num_of_users()+1
             query = """INSERT INTO users (id, login, password) VALUES(?, ?, ?)"""
-            values = (id, login, password)
+            values = (user_id, login, password)
             self.cursor.execute(query, values)
             return 1
-        else:
-            return 0
-
+        return 0
 
     def authentication(self, login, password):
-        user_password = self.cursor.execute("""SELECT password FROM users WHERE login == ?""", (login, )).fetchone()
+        login = (login, )
+
+        user_password = self.cursor.execute("""SELECT password FROM users WHERE login == ?""", login).fetchone()
         if user_password == None:
             return 'login error'
 
         if password == user_password[0]:
-            id = self.cursor.execute("""SELECT id FROM users WHERE login == ?""", (login, )).fetchone()[0]
+            id = self.cursor.execute("""SELECT id FROM users WHERE login == ?""", login).fetchone()[0]
             return 'successful'
-        else:
-            return 'password error'
+        return 'password error'
 
-    def get_id(self, login):
-        return self.cursor.execute("""SELECT id FROM users WHERE login == ?""", (login, )).fetchone()[0]
+    def get_id(self, login: Sequence):
+        return self.cursor.execute("""SELECT id FROM users WHERE login == ?""", login).fetchone()[0]
 

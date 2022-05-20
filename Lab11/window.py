@@ -1,4 +1,4 @@
-from  tkinter import *
+from tkinter import *
 from tkinter import messagebox
 from database import Database
 import hashlib
@@ -8,11 +8,10 @@ class Window:
     def __init__(self, width=600, height=300, title='Lab 11', resizable=(False, False)):
         self.window = Tk()
         self.window.title(title)
-        self.window.iconbitmap('Data\\img.ico')
+        self.window.iconbitmap('Data/img.ico')
         # определение формата окна и его положения
         self.window.geometry(f'{width}x{height}+450+200')
         self.window.resizable(resizable[0], resizable[1])
-
 
     def run(self):
         self.draw_widgets()
@@ -20,7 +19,6 @@ class Window:
 
     def close_window(self):
         self.window.destroy()
-
 
     def grab_focus(self):
         """Полностью захватывает фокус на текущем окне, до его закрытия"""
@@ -31,7 +29,6 @@ class Window:
         # предотвращение влияния на сторонние окна Tk до закрытия текущего
         self.window.wait_window()
 
-
     def draw_widgets(self):
         """Метод отрисовывает виджеты основного окна"""
         Label(self.window, text='Приветствуем вас в Lab 11!', font='Consolas 20').pack(anchor=N, pady=30)
@@ -41,11 +38,9 @@ class Window:
         Button(self.window, width=20, height=2, text='Зарегестрироваться', font=('Consolas', 8),
                             command=self.create_RegWin).pack(anchor=CENTER)
 
-
     def create_RegWin(self, width=400, height=200, type='Регистрация', title='Регистрация в Lab 11', resizable=(False, False)):
         """Метод создает окно регистрации нового пользователя"""
         LoginWindow(self.window, width, height, type, title, resizable)
-
 
     def create_EntrWin(self, width=400, height=200, type='Вход', title='Вход в Lab 11', resizable=(False, False)):
         """Метод создает окно входа"""
@@ -59,17 +54,18 @@ class LoginWindow(Window):
         self.window = Toplevel(parent)
 
         self.type = type
-        if self.type == 'Регистрация':
-            self.button_text = 'Зарегистрироваться'
-            self.window.title(f'{self.type} в Lab 11')
-        elif type == 'Вход':
-            self.button_text = 'Войти'
-            self.window.title(f'{self.type} в Lab 11')
+        match self.type:
+            case 'Регистрация':
+                self.button_text = 'Зарегистрироваться'
+                self.window.title(f'{self.type} в Lab 11')
+            case 'Вход':
+                self.button_text = 'Войти'
+                self.window.title(f'{self.type} в Lab 11')
 
-        self.window.iconbitmap('Data\\img.ico')
+        self.window.iconbitmap('Data/img.ico')
         # определение формата окна и положения курсора
         self.window.geometry(f'{width}x{height}+550+200')
-        self.window.resizable(resizable[0], resizable[1])
+        self.window.resizable(*resizable)
         # формы для ввода данных
         self.login = Entry(self.window)
         self.password = Entry(self.window, show='*')
@@ -83,7 +79,6 @@ class LoginWindow(Window):
     def __del__(self):
         self.db.close()
 
-
     def draw_widgets(self):
         """Метод отрисовывает все виджеты"""
         Label(self.window, text=self.type, font='Consolas 20').grid(row=0, column=1, sticky=W+E, padx=10, pady=5)
@@ -95,11 +90,32 @@ class LoginWindow(Window):
         Label(self.window, text='Password:', font='Consolas 9').grid(row=2, column=0, sticky=W, padx=10, pady=5)
         self.password.grid(row=2, column=1, sticky=W+E)
 
-
         # кнопки
         Button(self.window, width=20, height=1, text=self.button_text, font=('Consolas', 14, 'bold'), bd=8,
                             command=self.log).grid(row=3, column=1, sticky=W, padx=10, pady=20)
 
+    def user_registration(self, login, password_hash):
+        if self.db.new_user(login, password_hash):
+            self.db.commit()
+
+            self.window.destroy()
+            messagebox.showinfo('Регистрация', f'Пользователь {login} успешно зарегистрирован!')
+        else:
+            messagebox.showerror('Ошибка', f'Пользователь {login} уже существует, попробуйте другой login.')
+
+    def user_entrance(self, login, password, password_hash):
+        status = self.db.authentication(login, password_hash)
+        self.db.commit()
+
+        match status:
+            case 'successful':
+                self.close_window()
+                messagebox.showinfo('Вход', f'Вы успешно вошли!\n\nВаш логин: {login}\nВаш id: {self.db.get_id(login)}')
+            case 'login error':
+                messagebox.showerror('Ошибка', f'Пользователя {login} не существует. Зарегистрируйтесь перед тем, как войти.')
+                self.window.destroy()
+            case 'password error':
+                messagebox.showerror('Ошибка', f'Неверный пароль, попробуйте еще раз.')
 
     def log(self):
         """
@@ -111,27 +127,8 @@ class LoginWindow(Window):
         password = self.password.get()
         password_hash = hashlib.sha512(password.encode()).hexdigest()
 
-        if self.type == 'Регистрация':
-            if self.db.new_user(login, password_hash):
-                self.db.commit()
-
-                self.window.destroy()
-                messagebox.showinfo('Регистрация', f'Пользователь {login} успешно зарегистрирован!')
-            else:
-                messagebox.showerror('Ошибка', f'Пользователь {login} уже существует, попробуйте другой login.')
-
-
-        elif self.type == 'Вход':
-            status = self.db.authentication(login, password_hash)
-            self.db.commit()
-
-            if status == 'successful':
-                self.close_window()
-                messagebox.showinfo('Вход', f'Вы успешно вошли!\n\nВаш логин: {login}\nВаш id: {self.db.get_id(login)}')
-
-            elif status == 'login error':
-                messagebox.showerror('Ошибка', f'Пользователя {login} не существует. Зарегистрируйтесь перед тем, как войти.')
-                self.window.destroy()
-            elif status == 'password error':
-                messagebox.showerror('Ошибка', f'Неверный пароль, попробуйте еще раз.')
-
+        match self.type:
+            case 'Регистрация':
+                self.user_registration(login, password_hash)
+            case 'Вход':
+                self.user_entrance(login, password, password_hash)

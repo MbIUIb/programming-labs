@@ -8,6 +8,9 @@ class Database:
         self.cursor = self.db.cursor()
         self.create_table()
 
+    def __del__(self):
+        self.close()
+
     def create_table(self):
         self.cursor.execute("""CREATE TABLE IF NOT EXISTS users(id INTEGER, login TEXT, password TEXT)""")
 
@@ -29,8 +32,17 @@ class Database:
         if (login, ) not in self.get_user_logins():
             user_id = self.num_of_users()+1
             self.cursor.execute("""INSERT INTO users (id, login, password) VALUES(?, ?, ?)""", (user_id, login, password))
+            self.commit()
             return 1
         return 0
+
+    def change_password(self, user_id, new_password):
+        self.cursor.execute("""UPDATE users set password = ? WHERE id == ?""", (user_id, new_password))
+        self.commit()
+
+    def del_user(self, user_id):
+        self.cursor.execute("""DELETE FROM users WHERE id == ?""", (user_id, ))
+        self.commit()
 
     def authentication(self, login, password):
         login = (login, )

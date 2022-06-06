@@ -67,7 +67,7 @@ def lab_8(circle_x=0, circle_y=0):
     line_status = line_status(x, y)
     circle_status = circle_status(x, y)
     rectangle_status = rectangle_status(x, y)
-    scale = 15
+    scale = max(line_x1, line_x2, line_y1, line_y2, rectangle_x1, rectangle_x2, rectangle_y1, rectangle_y2, circle_x+circle_r, circle_y+circle_r)
     major_ticks = np.arange(-15, 14, 5)
     minor_ticks = np.arange(-15, 14, 1)
 
@@ -254,10 +254,10 @@ def lab_8(circle_x=0, circle_y=0):
     axes.spines['right'].set_visible(False)
     axes.spines['top'].set_visible(False)
     # стрелки направления осей
-    plt.text(-1, 14, 'Y')
-    plt.text(14, -2, 'X')
-    axes.scatter(0, 14.7, color='k', marker='^')
-    axes.scatter(14.7, 0, color='k', marker='>')
+    plt.text(-1, scale-1, 'Y')
+    plt.text(scale-1, -2, 'X')
+    axes.scatter(0, scale-0.3, color='k', marker='^')
+    axes.scatter(scale-0.3, 0, color='k', marker='>')
     # метки на осях
     axes.set_xticks(major_ticks)
     axes.set_xticks(minor_ticks, minor=True)
